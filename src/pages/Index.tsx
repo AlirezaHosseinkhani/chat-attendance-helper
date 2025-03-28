@@ -4,11 +4,11 @@ import ChatInterface from "@/components/ChatInterface";
 
 const Index: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-secondary/50">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-secondary/50" dir="rtl">
       <div className="flex flex-col items-center mb-8 animate-fade-in">
         <div className="bg-primary/5 rounded-full p-3 mb-2">
           <div className="text-primary text-2xl">
-            <span className="sr-only">Time Attendance Icon</span>
+            <span className="sr-only">آیکون حضور و غیاب</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="36"
@@ -25,16 +25,16 @@ const Index: React.FC = () => {
             </svg>
           </div>
         </div>
-        <h1 className="text-3xl font-light tracking-tight mb-1">Time Attendance</h1>
+        <h1 className="text-3xl font-light tracking-tight mb-1">سیستم حضور و غیاب</h1>
         <p className="text-muted-foreground text-center max-w-md">
-          Your intelligent assistant for all time and attendance inquiries
+          دستیار هوشمند شما برای تمامی سوالات مربوط به حضور و غیاب
         </p>
       </div>
       
       <ChatInterface />
       
       <footer className="mt-8 text-sm text-muted-foreground animate-fade-in opacity-0" style={{ animationDelay: "600ms" }}>
-        <p>Try asking about working hours, time off, or checking in</p>
+        <p>درباره ساعات کاری، مرخصی یا ورود و خروج بپرسید</p>
       </footer>
     </div>
   );

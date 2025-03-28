@@ -7,12 +7,13 @@ import { Send, Clock } from "lucide-react";
 import MessageBubble from "@/components/MessageBubble";
 import TypingIndicator from "@/components/TypingIndicator";
 import { Message, sendMessage } from "@/services/chatService";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [waitingForFeedback, setWaitingForFeedback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
@@ -25,7 +26,7 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     const welcomeMessage: Message = {
       id: "welcome",
-      content: "Hello! I'm your attendance assistant. How can I help you today?",
+      content: "سلام! من دستیار حضور و غیاب شما هستم. چطور می‌توانم به شما کمک کنم؟",
       isUser: false,
       timestamp: new Date()
     };
@@ -40,6 +41,16 @@ const ChatInterface: React.FC = () => {
     e.preventDefault();
     
     if (!input.trim() || isLoading) return;
+    
+    // Check if waiting for feedback on the last bot message
+    if (waitingForFeedback) {
+      toast({
+        title: "لطفا بازخورد دهید",
+        description: "لطفا قبل از ارسال سوال جدید، به پاسخ قبلی بازخورد دهید",
+        variant: "destructive"
+      });
+      return;
+    }
     
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -59,14 +70,16 @@ const ChatInterface: React.FC = () => {
         id: (Date.now() + 1).toString(),
         content: response,
         isUser: false,
-        timestamp: new Date()
+        timestamp: new Date(),
+        feedback: null
       };
       
       setMessages(prev => [...prev, botMessage]);
+      setWaitingForFeedback(true);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to get a response. Please try again.",
+        title: "خطا",
+        description: "خطا در دریافت پاسخ. لطفا دوباره تلاش کنید.",
         variant: "destructive"
       });
       console.error("Error getting response:", error);
@@ -75,20 +88,33 @@ const ChatInterface: React.FC = () => {
     }
   };
 
+  const handleFeedback = (messageId: string, feedback: 'like' | 'dislike') => {
+    setMessages(prev => 
+      prev.map(msg => 
+        msg.id === messageId ? { ...msg, feedback } : msg
+      )
+    );
+    setWaitingForFeedback(false);
+  };
+
   return (
-    <Card className="flex flex-col h-[calc(100vh-4rem)] max-w-3xl w-full glass-panel border-none mx-auto overflow-hidden">
+    <Card className="flex flex-col h-[calc(100vh-4rem)] max-w-3xl w-full glass-panel border-none mx-auto overflow-hidden" dir="rtl">
       <div className="flex items-center justify-center border-b p-4">
         <Clock className="h-5 w-5 mr-2 text-primary" />
-        <h1 className="text-xl font-medium">Attendance Assistant</h1>
+        <h1 className="text-xl font-medium">دستیار حضور و غیاب</h1>
       </div>
       
       <div className="flex-grow overflow-y-auto p-4 space-y-2">
         {messages.map(message => (
-          <MessageBubble key={message.id} message={message} />
+          <MessageBubble 
+            key={message.id} 
+            message={message} 
+            onFeedback={!message.isUser ? handleFeedback : undefined} 
+          />
         ))}
         
         {isLoading && (
-          <div className="flex justify-start animate-fade-in opacity-0" style={{ animationDelay: "100ms" }}>
+          <div className="flex justify-end animate-fade-in opacity-0" style={{ animationDelay: "100ms" }}>
             <TypingIndicator />
           </div>
         )}
@@ -98,22 +124,23 @@ const ChatInterface: React.FC = () => {
       
       <form onSubmit={handleSubmit} className="p-4 border-t">
         <div className="flex gap-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about attendance, time off, or work hours..."
-            className="bg-white/80"
-            disabled={isLoading}
-            autoComplete="off"
-          />
           <Button 
             type="submit" 
             size="icon"
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || !input.trim() || waitingForFeedback}
             className="transition-all duration-300 ease-in-out"
           >
             <Send className="h-4 w-4" />
           </Button>
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="درباره حضور و غیاب، مرخصی یا ساعات کاری بپرسید..."
+            className="bg-white/80"
+            disabled={isLoading || waitingForFeedback}
+            autoComplete="off"
+            dir="rtl"
+          />
         </div>
       </form>
     </Card>
