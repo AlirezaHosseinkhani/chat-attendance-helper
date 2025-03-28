@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Send, Clock } from "lucide-react";
 import MessageBubble from "@/components/MessageBubble";
 import TypingIndicator from "@/components/TypingIndicator";
-import { Message, sendMessage } from "@/services/chatService";
+import { Message, sendMessage, sendFeedback } from "@/services/chatService";
 import { useToast } from "@/hooks/use-toast";
 
 const ChatInterface: React.FC = () => {
@@ -71,7 +71,8 @@ const ChatInterface: React.FC = () => {
         content: response,
         isUser: false,
         timestamp: new Date(),
-        feedback: null
+        feedback: null,
+        question: userMessage.content // Store the question for later feedback
       };
       
       setMessages(prev => [...prev, botMessage]);
@@ -88,13 +89,55 @@ const ChatInterface: React.FC = () => {
     }
   };
 
-  const handleFeedback = (messageId: string, feedback: 'like' | 'dislike') => {
-    setMessages(prev => 
-      prev.map(msg => 
-        msg.id === messageId ? { ...msg, feedback } : msg
-      )
-    );
-    setWaitingForFeedback(false);
+  const handleFeedback = async (messageId: string, feedback: 'like' | 'dislike') => {
+    // Find the message to update
+    const messageToUpdate = messages.find(msg => msg.id === messageId);
+    
+    if (!messageToUpdate || messageToUpdate.isUser) {
+      return;
+    }
+    
+    try {
+      // Update the message in state first
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === messageId ? { ...msg, feedback } : msg
+        )
+      );
+      
+      // Send feedback to the API
+      if (messageToUpdate.question) {
+        await sendFeedback(
+          messageToUpdate.question,
+          messageToUpdate.content,
+          feedback
+        );
+        
+        toast({
+          title: "با تشکر از بازخورد شما",
+          description: feedback === 'like' ? "از پاسندیدن پاسخ متشکریم" : "از بازخورد شما متشکریم، تلاش می‌کنیم بهتر شویم",
+        });
+      }
+      
+      // Allow user to ask a new question
+      setWaitingForFeedback(false);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'خطا در ارسال بازخورد';
+      
+      toast({
+        title: "خطا",
+        description: errorMessage,
+        variant: "destructive"
+      });
+      
+      // Revert the feedback if API call failed
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === messageId ? { ...msg, feedback: null } : msg
+        )
+      );
+      console.error("Error sending feedback:", error);
+    }
   };
 
   return (
