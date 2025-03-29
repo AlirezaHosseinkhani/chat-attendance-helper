@@ -25,16 +25,16 @@ const Index: React.FC = () => {
             </svg>
           </div>
         </div>
-        <h1 className="text-3xl font-light tracking-tight mb-1">سیستم حضور و غیاب</h1>
+        <h1 className="text-3xl font-light tracking-tight mb-1">دستیار هوشمند حضور و غیاب</h1>
         <p className="text-muted-foreground text-center max-w-md">
-          دستیار هوشمند شما برای تمامی سوالات مربوط به حضور و غیاب
+          دستیار هوشمند شما برای تمامی سوالات مربوط به وبسایت اطلس 
         </p>
       </div>
       
       <ChatInterface />
       
       <footer className="mt-8 text-sm text-muted-foreground animate-fade-in opacity-0" style={{ animationDelay: "600ms" }}>
-        <p>درباره ساعات کاری، مرخصی یا ورود و خروج بپرسید</p>
+        <p>پاسخگویی به سوالات مربوط به آموزش، انواع دستگاه ها و اخبار سایت</p>
       </footer>
     </div>
   );

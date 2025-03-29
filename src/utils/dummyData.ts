@@ -56,13 +56,12 @@ const dummyData: QAPair[] = [
 ];
 
 export const getDummyResponse = (question: string): string => {
-  // Try to find a matching question in our dummy data
+
   for (const pair of dummyData) {
     if (pair.question.test(question)) {
       return pair.answer;
     }
   }
   
-  // Default response if no match found
   return "I don't have specific information about that yet. For attendance questions, try asking about work hours, time off, sick leave, or check-in/out procedures.";
 };
