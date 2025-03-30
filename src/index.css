@@ -88,6 +88,15 @@
   }
 }
 
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('./assets/fonts/IRANSansMobile.ttf') format('truetype');
+}
+
+* {
+  font-family: 'MyCustomFont', sans-serif;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

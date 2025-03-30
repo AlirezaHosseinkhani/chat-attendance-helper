@@ -27,7 +27,7 @@ const Index: React.FC = () => {
         </div>
         <h1 className="text-3xl font-light tracking-tight mb-1">دستیار هوشمند حضور و غیاب</h1>
         <p className="text-muted-foreground text-center max-w-md">
-          دستیار هوشمند شما برای تمامی سوالات مربوط به وبسایت اطلس 
+          دستیار هوشمند شما برای تمامی سوالات مربوط به وب سایت اطلس 
         </p>
       </div>
       
