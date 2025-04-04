@@ -12,7 +12,9 @@ export interface Message {
 
 export const sendMessage = async (question: string, session_id: string): Promise<string> => {
   try {
-    const response = await fetch('http://192.168.0.116:5000/ask', {
+    // const response = await fetch('http://192.168.0.116:5000/ask', {
+
+    const response = await fetch('http://localhost:8000/api/v1/chat/ask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -23,8 +25,8 @@ export const sendMessage = async (question: string, session_id: string): Promise
     if (!response.ok) {
       throw new Error('خطا در دریافت پاسخ');
     }
-
     const data = await response.json();
+    console.error(data.answer);
     return data.answer || data; // Handle different response formats
   } catch (error) {
     console.error('Error sending message:', error);
@@ -34,7 +36,9 @@ export const sendMessage = async (question: string, session_id: string): Promise
 
 export const sendFeedback = async (question: string, answer: string, session_id: string, feedback: 'like' | 'dislike'): Promise<boolean> => {
   try {
-    const response = await fetch('http://192.168.0.116:5000/feedback', {
+    // const response = await fetch('http://192.168.0.116:5000/feedback', {
+
+    const response = await fetch('http://localhost:8000/api/v1/feedback/feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

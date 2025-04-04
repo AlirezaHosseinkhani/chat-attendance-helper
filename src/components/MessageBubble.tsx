@@ -14,7 +14,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onFeedback }) =>
   const formattedTime = new Intl.DateTimeFormat('fa-IR', {
     hour: 'numeric',
     minute: 'numeric',
-    hour12: true
+    hour12: false
   }).format(message.timestamp);
 
   const handleFeedback = (feedback: 'like' | 'dislike') => {
