@@ -14,7 +14,7 @@ export const sendMessage = async (question: string, session_id: string): Promise
   try {
     // const response = await fetch('http://192.168.0.116:5000/ask', {
 
-    const response = await fetch('http://localhost:8000/api/v1/chat/ask', {
+    const response = await fetch('http://192.168.8.82:8000/api/v1/chat/ask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export const sendFeedback = async (question: string, answer: string, session_id:
   try {
     // const response = await fetch('http://192.168.0.116:5000/feedback', {
 
-    const response = await fetch('http://localhost:8000/api/v1/feedback/feedback', {
+    const response = await fetch('http://192.168.8.82:8000/api/v1/feedback/feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -3,6 +3,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Message } from "@/services/chatService";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { formatMessageContent } from "@/utils/formatMessageContent";
 
 interface MessageBubbleProps {
   message: Message;
@@ -39,7 +40,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onFeedback }) =>
             : "glass-panel rounded-tr-none"
         )}
       >
-        <p className="text-base leading-relaxed" dir="rtl">{message.content}</p>
+        <p className="text-base leading-relaxed" dir="rtl"> {formatMessageContent(message.content)}</p>
         <div
           className={cn(
             "text-xs mt-1",
