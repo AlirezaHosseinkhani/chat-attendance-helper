@@ -12,8 +12,6 @@ export interface Message {
 
 export const sendMessage = async (question: string, session_id: string): Promise<string> => {
   try {
-    // const response = await fetch('http://192.168.0.116:5000/ask', {
-
     const response = await fetch('http://192.168.8.82:8000/api/v1/chat/ask', {
       method: 'POST',
       headers: {
@@ -22,17 +20,21 @@ export const sendMessage = async (question: string, session_id: string): Promise
       body: JSON.stringify({ question, session_id })
     });
 
-    if (!response.ok) {
-      throw new Error('خطا در دریافت پاسخ');
-    }
     const data = await response.json();
-    console.error(data.answer);
+
+    if (!response.ok) {
+      // Throw server's error message
+      throw new Error(data.detail || 'خطایی رخ داده است');
+    }
+
+    console.log(data.answer);
     return data.answer || data; // Handle different response formats
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error sending message:', error);
-    throw new Error('خطا در ارتباط با سرور');
+    throw new Error(error.message || 'خطا در ارتباط با سرور');
   }
 };
+
 
 export const sendFeedback = async (question: string, answer: string, session_id: string, feedback: 'like' | 'dislike'): Promise<boolean> => {
   try {

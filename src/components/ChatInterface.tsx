@@ -82,7 +82,7 @@ const ChatInterface: React.FC = () => {
     } catch (error) {
       toast({
         title: "خطا",
-        description: "خطا در دریافت پاسخ. لطفا دوباره تلاش کنید.",
+        description: error.message || "خطا در دریافت پاسخ. لطفا دوباره تلاش کنید.",
         variant: "destructive"
       });
       console.error("Error getting response:", error);
